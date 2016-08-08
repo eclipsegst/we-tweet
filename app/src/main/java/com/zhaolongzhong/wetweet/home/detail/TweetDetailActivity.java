@@ -2,8 +2,10 @@ package com.zhaolongzhong.wetweet.home.detail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -16,9 +18,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -40,6 +44,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+
+import static com.activeandroid.Cache.getContext;
 
 /**
  * Created by Zhaolong Zhong on 8/4/16.
@@ -63,7 +69,8 @@ public class TweetDetailActivity extends AppCompatActivity {
     @BindView(R.id.tweet_detail_activity_name_text_view_id) TextView nameTextView;
     @BindView(R.id.tweet_detail_activity_screen_name_text_view_id) TextView screenNameTextView;
     @BindView(R.id.tweet_detail_activity_tweet_text_view_id) TextView tweetTextView;
-    @BindView(R.id.tweet_detail_activity_action_tweet_media_image_view_id) ImageView mediaImageView;
+    @BindView(R.id.tweet_detail_activity_media_image_view_id) ImageView mediaImageView;
+    @BindView(R.id.tweet_detail_activity_media_video_view_id) VideoView mediaVideoView;
     @BindView(R.id.tweet_detail_activity_created_at_text_view_id) TextView createdAtTextView;
 
     @BindView(R.id.tweet_detail_activity_retweet_count_text_view_id) TextView retweetCountTextView;
@@ -102,12 +109,14 @@ public class TweetDetailActivity extends AppCompatActivity {
         client = RestApplication.getRestClient();
 
         invalidateViews();
-//        getDetailAsync(String.valueOf(tweet.getId()));
     }
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         titleTextView.setText(getString(R.string.tweet));
         titleTextView.setOnClickListener(v -> close());
         backImageView.setOnClickListener(v -> close());
@@ -139,13 +148,7 @@ public class TweetDetailActivity extends AppCompatActivity {
         }
 
         // media
-        if (tweet.getMedias().size() > 0) {
-            Media media = tweet.getMedias().get(0);
-
-            if (media.getType().equals("photo")) {
-                Glide.with(this).load(media.getMediaUrl()).into(mediaImageView);
-            }
-        }
+        setupMedia();
 
         replyEditText.setHint("Reply to " + tweet.getUser().getName());
         replyEditText.addTextChangedListener(tweetTextWatcher);
@@ -174,6 +177,58 @@ public class TweetDetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setupMedia() {
+        mediaImageView.setVisibility(View.GONE);
+        mediaVideoView.setVisibility(View.GONE);
+
+        if (tweet.getMedias().size() == 0) {
+            return;
+        }
+
+        Media media = tweet.getMedias().get(0);
+
+        if (media.getType().toLowerCase().contains("video")) {
+            mediaVideoView.setVisibility(View.VISIBLE);
+            mediaVideoView.setVideoPath(media.getVideoUrl());
+            MediaController mediaController = new MediaController(this);
+            mediaController.setAnchorView(mediaVideoView);
+            mediaVideoView.setMediaController(mediaController);
+
+            mediaVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                // Close the progress bar and play the video
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaVideoView.start();
+                    mediaVideoView.canPause();
+                    mediaController.show(2000);
+                }
+            });
+            mediaVideoView.requestFocus();
+
+        } else if(media.getType().toLowerCase().contains("animated_gif")) {
+            mediaVideoView.setVisibility(View.VISIBLE);
+            mediaVideoView.setVideoPath(media.getVideoUrl());
+            MediaController mediaController = new MediaController(this);
+            mediaController.setAnchorView(mediaVideoView);
+            mediaVideoView.setMediaController(mediaController);
+
+            mediaVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                // Close the progress bar and play the video
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.start();
+                }
+            });
+
+            mediaVideoView.requestFocus();
+
+        } else if (media.getType().equals("photo")) {
+            mediaImageView.setVisibility(View.VISIBLE);
+            Glide.with(getContext()).load(media.getMediaUrl()).into(mediaImageView);
+        } else {
+            mediaImageView.setVisibility(View.GONE);
+            mediaVideoView.setVisibility(View.GONE);
+        }
     }
 
     private View.OnClickListener editTextOnClickListener = new View.OnClickListener() {

@@ -96,8 +96,8 @@
 
                 <VideoView
                     android:id="@+id/tweet_item_normal_media_video_video_view_id"
-                    android:layout_width="240dp"
-                    android:layout_height="140dp"
+                    android:layout_width="260dp"
+                    android:layout_height="150dp"
                     android:layout_below="@+id/tweet_item_normal_media_photo_image_view_id"
                     android:layout_marginTop="@dimen/space_medium"
                     android:layout_marginBottom="@dimen/space_medium"

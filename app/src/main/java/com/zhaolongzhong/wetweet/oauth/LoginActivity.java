@@ -50,7 +50,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
 
     @Override
     public void onLoginSuccess() {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(LOGIN_USER_ID, Context.MODE_PRIVATE);
         long loginUserId= sharedPref.getLong(LOGIN_USER_ID, -1);
 
         Log.d(TAG, "zhao loginUserId:" + loginUserId);
@@ -92,6 +92,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
                     Log.d(TAG, "onFailure: " + statusCode + ", " + jsonObject);
                 }
             });
+        } else {
+            MainActivity.newInstance(LoginActivity.this);
+            finish();
         }
     }
 

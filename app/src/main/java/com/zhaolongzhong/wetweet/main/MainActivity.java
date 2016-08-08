@@ -21,7 +21,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,37 +39,37 @@ import com.zhaolongzhong.wetweet.oauth.LoginActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-//    @BindView(R.id.toolbar) Toolbar toolbar;
-//    @BindView(R.id.main_activity_logo_image_view_id) ImageView logoImageView;
-//    @BindView(R.id.main_activity_recycler_view_id) RecyclerView recyclerView;
-
-    private final int[] tabTitles = {
+    private static final int[] tabTitles = {
             R.string.fragment_title_home,
             R.string.fragment_title_moments,
             R.string.fragment_title_notifications,
             R.string.fragment_title_messages
     };
 
-    private final int[] tabIcons = {
+    private static final int[] tabIcons = {
             R.drawable.ic_home_black_24dp,
             R.drawable.ic_flash_on_black_24dp,
             R.drawable.ic_notifications_black_24dp,
             R.drawable.ic_mail_black_24dp
     };
 
-    private ActionBar actionBar;
+    private User currentUser;
 
-    private DrawerLayout mDrawerLayout;
-    private TabLayout tabLayout;
-    private CircleImageView circleImageView;
-    private CircleImageView navHeaderCircleImageView;
-    private TextView titleTextView;
+    @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
+    @BindView(R.id.main_activity_navigation_view_id) NavigationView navigationView;
+    @BindView(R.id.main_activity_content_toolbar_id) Toolbar toolbar;
+    @BindView(R.id.main_activity_content_toolbar_profile_circle_image_view_id) CircleImageView toolbarCircleImageView;
+    @BindView(R.id.main_activity_content_toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.main_activity_content_view_pager_id) ViewPager viewPager;
+    @BindView(R.id.main_activity_content_tab_layout_id) TabLayout tabLayout;
+    @BindView(R.id.main_activity_content_fab_id) FloatingActionButton fab;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -83,81 +82,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tweet_detail_activity_toolbar_id);
+        SharedPreferences sharedPref = getSharedPreferences(LoginActivity.LOGIN_USER_ID, Context.MODE_PRIVATE);
+        long loginUserId= sharedPref.getLong(LoginActivity.LOGIN_USER_ID, -1);
+        currentUser = User.getUserById(loginUserId);
+
+        setupToolbarDrawerPager();
+
+        fab.setOnClickListener(v -> {
+            NewTweetActivity.newInstance(this);
+            overridePendingTransition(R.anim.bottom_in, R.anim.stay);
+        });
+    }
+
+    private void setupToolbarDrawerPager() {
+        // Toolbar
         setSupportActionBar(toolbar);
-        circleImageView = (CircleImageView) toolbar.findViewById(R.id.toolbar_avatar_circle_image_view_id);
-        circleImageView.setOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
-        titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title_text_view_id);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar!= null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
 
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
+        titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_content_toolbar_title_text_view_id);
+        toolbarCircleImageView.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        Glide.with(MainActivity.this)
+                .load(currentUser.getProfileImageUrl())
+                .into(toolbarCircleImageView);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
+        // Drawer layout
         if (navigationView != null) {
             setupDrawerContent(navigationView);
             View headView = navigationView.getHeaderView(0);
-            navHeaderCircleImageView =  (CircleImageView) headView.findViewById(R.id.nav_header_avatar_circle_image_view_id);
+            CircleImageView navHeaderCircleImageView =  (CircleImageView) headView.findViewById(R.id.nav_header_avatar_circle_image_view_id);
             Glide.with(MainActivity.this)
-                    .load("https://pbs.twimg.com/profile_images/675862234266931200/Gqz94bZk_normal.jpg")
+                    .load(currentUser.getProfileImageUrl())
                     .into(navHeaderCircleImageView);
         }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-        }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            NewTweetActivity.newInstance(MainActivity.this);
-            overridePendingTransition(R.anim.bottom_in, R.anim.stay);
-        });
-
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        // View pager
+        setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-
-        setUpTabLayout(tabLayout);
-
-        SharedPreferences sharedPref = getSharedPreferences(LoginActivity.LOGIN_USER_ID, Context.MODE_PRIVATE);
-        long loginUserId= sharedPref.getLong(LoginActivity.LOGIN_USER_ID, -1);
-        User currentUser = User.getUserById(loginUserId);
-
-        Log.d(TAG, "zhao loginUserId:" + loginUserId);
-
-        Glide.with(MainActivity.this)
-                .load(currentUser.getProfileImageUrl())
-//                .load("https://pbs.twimg.com/profile_images/675862234266931200/Gqz94bZk_normal.jpg")
-                .into(circleImageView);
-
-//        client.verifyCredentials(2, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-//                Log.d(TAG, "Credentials : \n" + jsonObject);
-//                //todo: add to local db to avoid rate limit exceeded
-//                try {
-//                    String profileImageUrl = jsonObject.getString("profile_image_url");
-//                    Glide.with(MainActivity.this)
-//                            .load(profileImageUrl)
-//                            .into(circleImageView);
-//                } catch (JSONException e) {
-//                    Log.e(TAG, "Error in parsing credential object.", e);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
-//                Log.d(TAG, "onFailure: " + statusCode + ", " + jsonObject);
-//            }
-//        });
+        setupTabLayout(tabLayout);
     }
 
     /**
      * Set up tab layout
      */
-    private void setUpTabLayout(TabLayout tabLayout) {
+    private void setupTabLayout(TabLayout tabLayout) {
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
         setUpTabLayoutDefaultTabIcon(tabLayout);
 
@@ -215,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
             menuItem.setChecked(true);
-            mDrawerLayout.closeDrawers();
+            drawerLayout.closeDrawers();
             return true;
         });
     }
@@ -249,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.menu_night_mode_system:
                 setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
@@ -275,32 +245,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    static class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
+    private static class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> fragments = new ArrayList<>();
+        private final List<String> fragmentTitles = new ArrayList<>();
 
         public ViewPagerFragmentAdapter(FragmentManager fm) {
             super(fm);
         }
 
         public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
+            fragments.add(fragment);
+            fragmentTitles.add(title);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return mFragments.get(position);
+            return fragments.get(position);
         }
 
         @Override
         public int getCount() {
-            return mFragments.size();
+            return fragments.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
+            return fragmentTitles.get(position);
         }
     }
 }

@@ -41,7 +41,6 @@ public class TweetFragment extends Fragment {
     private ArrayList<Tweet> tweets;
     private TweetsAdapter tweetsAdapter;
     private LinearLayoutManager linearLayoutManager;
-
     private boolean isRefresh = false;
 
     @BindView(R.id.tweet_fragment_swipe_refresh_layout_id) SwipeRefreshLayout swipeRefreshLayout;
@@ -73,8 +72,8 @@ public class TweetFragment extends Fragment {
     }
 
     private void setupToolbar(LinearLayoutManager linearLayoutManager) {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tweet_detail_activity_toolbar_id);
-        TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title_text_view_id);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_activity_content_toolbar_id);
+        TextView titleTextView = (TextView) toolbar.findViewById(R.id.main_activity_content_toolbar_title_text_view_id);
         titleTextView.setOnClickListener(v -> linearLayoutManager.scrollToPositionWithOffset(0, 0));
     }
 
@@ -117,16 +116,18 @@ public class TweetFragment extends Fragment {
                 if (isRefresh) {
                     tweetsAdapter.clear();
                     tweetsAdapter.addAll(moreTweets);
-                    swipeRefreshLayout.setRefreshing(false);
                 } else {
                     tweetsAdapter.addAll(moreTweets);
                     tweetsAdapter.notifyItemRangeInserted(currentSize, tweets.size() - 1);
                 }
+
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
                 Log.d(TAG, "onFailure: " + statusCode + ", " + jsonObject);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -134,7 +135,6 @@ public class TweetFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //todo: update list
 
         isRefresh = true;
         populateTimeline(TWEET_COUNT_PER_PAGE, 0);

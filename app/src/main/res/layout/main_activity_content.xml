@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
+    android:id="@+id/main_activity_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/main_activity_content_appbar_layout_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/tweet_detail_activity_toolbar_id"
+            android:id="@+id/main_activity_content_toolbar_id"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -23,27 +23,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <!-- Toolbar profile circle image view -->
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/toolbar_avatar_circle_image_view_id"
+                    android:id="@+id/main_activity_content_toolbar_profile_circle_image_view_id"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="0dp"
                     android:layout_gravity="left"
                     android:layout_centerVertical="true"/>
 
+                <!-- Toolbar title -->
                 <TextView
-                    android:id="@+id/toolbar_title_text_view_id"
+                    android:id="@+id/main_activity_content_toolbar_title_text_view_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/toolbar_avatar_circle_image_view_id"
+                    android:layout_toEndOf="@+id/main_activity_content_toolbar_profile_circle_image_view_id"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/space_medium"
 
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_medium_small"/>
 
+                <!-- Toolbar search image view -->
                 <ImageView
-                    android:id="@+id/toolbar_search_image_view_id"
+                    android:id="@+id/main_activity_content_toolbar_search_image_view_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -58,7 +61,7 @@
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/main_activity_content_tab_layout_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorHeight="3dp"/>
@@ -66,13 +69,13 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+        android:id="@+id/main_activity_content_view_pager_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/main_activity_content_fab_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"

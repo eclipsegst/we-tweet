@@ -130,13 +130,34 @@
                     android:linksClickable="true"
                     android:fontFamily="sans-serif-light"/>
 
-                <ImageView
-                    android:id="@+id/tweet_detail_activity_action_tweet_media_image_view_id"
+                <!-- Tweet media -->
+                <RelativeLayout
+                    android:id="@+id/tweet_detail_activity_action_tweet_media_relative_layout_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tweet_detail_activity_tweet_text_view_id"
+                    android:layout_below="@+id/tweet_detail_activity_tweet_text_view_id">
 
-                    android:visibility="gone"/>
+                    <ImageView
+                        android:id="@+id/tweet_detail_activity_media_image_view_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_medium"
+                        android:layout_marginLeft="@dimen/space_medium"
+                        android:layout_marginRight="@dimen/space_medium"
+
+                        android:visibility="gone"/>
+
+                    <VideoView
+                        android:id="@+id/tweet_detail_activity_media_video_view_id"
+                        android:layout_width="320dp"
+                        android:layout_height="240dp"
+                        android:layout_marginTop="@dimen/space_medium"
+                        android:layout_marginLeft="@dimen/space_medium"
+                        android:layout_marginRight="@dimen/space_medium"
+
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
 
                 <!-- Created At -->
                 <TextView
@@ -144,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@+id/tweet_detail_activity_action_tweet_media_image_view_id"
+                    android:layout_below="@+id/tweet_detail_activity_action_tweet_media_relative_layout_id"
                     android:layout_marginTop="@dimen/space_medium"
                     android:layout_marginLeft="@dimen/space_medium"
                     android:layout_marginRight="@dimen/space_medium"
@@ -400,14 +421,15 @@
                 android:background="@color/blueGray"
                 android:alpha="0.2"/>
 
+            <!-- Reply button -->
             <Button
                 android:id="@+id/tweet_detail_activity_reply_button_id"
                 android:layout_width="70dp"
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginLeft="@dimen/space_really_small"
-                android:layout_marginRight="@dimen/space_medium"
+                android:layout_marginStart="@dimen/space_medium"
+                android:layout_marginEnd="@dimen/space_really_small"
 
                 android:elevation="0dp"
                 android:text="@string/reply"
