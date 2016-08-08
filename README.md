@@ -2,7 +2,7 @@
 
 **WeTweet** is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **26** hours spent in total
+Time spent: **32** hours spent in total
 
 ## User Stories
 
@@ -54,12 +54,14 @@ The following **additional** features are implemented:
 * [X] Add Reply, Reply, Like, Message UI in tweet list
 * [X] Add part of Like functionality
 * [X] Create some icons using Sketch
+* [X] Style navigation drawer like Twitter
+* [X] Add reply functionality in tweet list
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-![Video Walkthrough](we_tweet.gif)
+![Video Walkthrough](we_tweet_2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
