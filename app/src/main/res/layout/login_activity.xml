@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zhaolongzhong.wetweet.oauth.LoginActivity"
+    android:background="@color/blue"
+    android:fitsSystemWindows="true"
+    android:windowBackground="@color/blue">
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/welcome_activity_image_view_id"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="30dp"
+
+        android:src="@drawable/ic_launcher_96"/>
+
+    <!-- Welcome -->
+    <TextView
+        android:id="@+id/welcome_activity_welcome_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/welcome_activity_subtitle_text_view_id"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+
+        android:layout_marginBottom="20dp"
+        android:text="@string/welcome_title"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_ultra_large"
+        android:fontFamily="sans-serif-bold" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/welcome_activity_subtitle_text_view_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginStart="40dp"
+
+        android:text="@string/welcome_subtitle"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_medium"
+        android:gravity="left"/>
+
+    <!-- Use OAuth -->
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/welcome_activity_sign_up_button_id"
+        android:layout_marginBottom="30dp"
+
+        android:onClick="loginToTwitter"
+        android:text="@string/connect_to_twitter"
+        android:textSize="@dimen/text_medium_small"
+        android:textColor="@color/blue"
+        android:textAllCaps="false"
+        android:background="@drawable/background_round"
+        android:elevation="0dp"/>
+
+    <!-- Sign up -->
+    <Button
+        android:id="@+id/welcome_activity_sign_up_button_id"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/welcome_activity_log_in_text_view_id"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="@string/sign_up"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/text_medium_small"
+        android:textAllCaps="false"
+        android:gravity="center"
+        android:background="@drawable/background_round"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <!-- Login -->
+    <TextView
+        android:id="@+id/welcome_activity_log_in_text_view_id"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+
+        android:text="@string/login_in"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_small"
+        android:gravity="center"
+        android:background="@drawable/background_round_border_only"/>
+
+</RelativeLayout>

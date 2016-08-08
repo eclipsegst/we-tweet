@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tweet_detail_activity_toolbar_id"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+
+        android:background="?attr/colorPrimary"
+        android:elevation="2dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/tweet_detail_activity_toolbar_back_image_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+
+                android:src="@drawable/ic_arrow_back_black_24dp"
+                android:tint="@color/blue"/>
+
+            <TextView
+                android:id="@+id/tweet_detail_activity_toolbar_title_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tweet_detail_activity_toolbar_back_image_view_id"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/space_really_large"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium_small"/>
+
+            <ImageView
+                android:id="@+id/tweet_detail_activity_toolbar_search_image_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/space_medium_large"
+
+                android:src="@drawable/ic_search_black_24dp"
+                android:tint="@color/blue"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tweet_detail_activity_toolbar_id">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Tweet -->
+            <RelativeLayout
+                android:id="@+id/tweet_detail_activity_tweet_relative_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Profile image -->
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/tweet_detail_activity_card_view_id"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="@dimen/space_medium"
+                    android:layout_alignParentTop="true"
+
+                    android:elevation="0dp"
+                    card_view:cardCornerRadius="4dp">
+
+                    <ImageView
+                        android:id="@+id/tweet_detail_activity_profile_image_view_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                </android.support.v7.widget.CardView>
+
+                <!-- Name -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/tweet_detail_activity_card_view_id">
+
+                    <TextView
+                        android:id="@+id/tweet_detail_activity_name_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/tweet_detail_activity_screen_name_text_view_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_below="@+id/tweet_detail_activity_name_text_view_id"
+
+                        android:textColor="@color/blueGray"
+                        android:fontFamily="sans-serif-light" />
+
+                </RelativeLayout>
+
+                <!-- Tweet content -->
+                <TextView
+                    android:id="@+id/tweet_detail_activity_tweet_text_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tweet_detail_activity_card_view_id"
+                    android:layout_marginLeft="@dimen/space_medium"
+                    android:layout_marginRight="@dimen/space_medium"
+
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium_small"
+                    android:autoLink="all"
+                    android:linksClickable="true"
+                    android:fontFamily="sans-serif-light"/>
+
+                <ImageView
+                    android:id="@+id/tweet_detail_activity_action_tweet_media_image_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tweet_detail_activity_tweet_text_view_id"
+
+                    android:visibility="gone"/>
+
+                <!-- Created At -->
+                <TextView
+                    android:id="@+id/tweet_detail_activity_created_at_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tweet_detail_activity_action_tweet_media_image_view_id"
+                    android:layout_marginTop="@dimen/space_medium"
+                    android:layout_marginLeft="@dimen/space_medium"
+                    android:layout_marginRight="@dimen/space_medium"
+
+                    android:textColor="@color/blueGray"
+                    android:fontFamily="sans-serif-light"/>
+
+                <View
+                    android:id="@+id/tweet_detail_activity_likes_top_border_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/tweet_detail_activity_created_at_text_view_id"
+                    android:layout_marginLeft="@dimen/space_medium"
+                    android:layout_marginRight="@dimen/space_medium"
+                    android:layout_marginTop="@dimen/space_medium_small"
+                    android:layout_marginBottom="@dimen/space_medium_small"
+
+                    android:background="@color/blueGray"
+                    android:alpha="0.2"/>
+
+                <!-- Retweet count -->
+                <TextView
+                    android:id="@+id/tweet_detail_activity_retweet_count_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tweet_detail_activity_likes_top_border_view_id"
+                    android:layout_marginLeft="@dimen/space_medium"
+                    android:layout_marginRight="@dimen/space_medium"
+
+                    android:text="2"
+                    android:textColor="@color/black"/>
+
+                <!-- Retweet label -->
+                <TextView
+                    android:id="@+id/tweet_detail_activity_retweet_label_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tweet_detail_activity_likes_top_border_view_id"
+                    android:layout_toEndOf="@id/tweet_detail_activity_retweet_count_text_view_id"
+
+                    android:text="@string/retweet"
+                    android:textColor="@color/blueGray"
+                    android:fontFamily="sans-serif-light"/>
+
+                <!-- Likes count -->
+                <TextView
+                    android:id="@+id/tweet_detail_activity_likes_count_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tweet_detail_activity_likes_top_border_view_id"
+                    android:layout_toEndOf="@+id/tweet_detail_activity_retweet_label_text_view_id"
+                    android:layout_marginLeft="@dimen/space_medium"
+                    android:layout_marginRight="@dimen/space_medium"
+
+                    android:text="26"
+                    android:textColor="@color/black"/>
+
+                <!-- Likes label -->
+                <TextView
+                    android:id="@+id/tweet_detail_activity_likes_label_text_view_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tweet_detail_activity_likes_top_border_view_id"
+                    android:layout_toEndOf="@+id/tweet_detail_activity_likes_count_text_view_id"
+
+                    android:text="@string/likes"
+                    android:textColor="@color/blueGray"
+                    android:fontFamily="sans-serif-light"/>
+
+                <View
+                    android:id="@+id/tweet_detail_activity_likes_bottom_border_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/tweet_detail_activity_retweet_count_text_view_id"
+                    android:layout_marginLeft="@dimen/space_medium"
+                    android:layout_marginRight="@dimen/space_medium"
+                    android:layout_marginTop="@dimen/space_medium_small"
+                    android:layout_marginBottom="@dimen/space_medium_small"
+
+                    android:background="@color/blueGray"
+                    android:alpha="0.2"/>
+
+            </RelativeLayout>
+
+            <!-- Action -->
+            <LinearLayout
+                android:id="@+id/tweet_detail_activity_action_linear_layout_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/tweet_detail_activity_tweet_relative_layout_id"
+                android:layout_marginBottom="@dimen/space_medium">
+
+                <!-- Reply -->
+                <ImageView
+                    android:id="@+id/tweet_detail_activity_action_reply_image_view_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:src="@drawable/ic_reply_black_24dp"
+                    android:tint="@color/blueGray"/>
+
+                <!-- Retweet -->
+                <ImageView
+                    android:id="@+id/tweet_detail_activity_action_retweet_image_view_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:src="@drawable/ic_repeat_black_24dp"
+                    android:tint="@color/blueGray"/>
+
+                <!-- Like -->
+                <ImageView
+                    android:id="@+id/tweet_detail_activity_action_like_image_view_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:src="@drawable/ic_favorite_black_24dp"
+                    android:tint="@color/blueGray"/>
+
+                <!-- Message -->
+                <ImageView
+                    android:id="@+id/tweet_detail_activity_action_message_image_view_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:src="@drawable/ic_mail_black_24dp"
+                    android:tint="@color/blueGray"/>
+
+                <!-- Share -->
+                <ImageView
+                    android:id="@+id/tweet_detail_activity_action_share_image_view_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:src="@drawable/ic_share_black_24dp"
+                    android:tint="@color/blueGray"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/tweet_detail_activity_action_bottom_border_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/tweet_detail_activity_action_linear_layout_id"
+
+                android:background="@color/blueGray"
+                android:alpha="0.2"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/tweet_detail_activity_reply_edit_text_relative_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/tweet_detail_activity_reply_hint_top_border_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+
+            android:background="@color/blueGray"
+            android:alpha="0.2"/>
+
+        <EditText
+            android:id="@+id/tweet_detail_activity_reply_edit_text_id"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/space_medium"
+            android:layout_marginEnd="@dimen/space_medium"
+
+            android:textSize="@dimen/text_small"
+            android:textColorHint="@color/blueGray"
+            android:fontFamily="sans-serif-light"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:imeOptions="flagNoExtractUi"
+            android:focusable="false"
+            android:background="@android:color/transparent"/>
+
+        <View
+            android:id="@+id/tweet_detail_activity_reply_hint_bottom_border_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tweet_detail_activity_reply_edit_text_id"
+            android:layout_marginLeft="@dimen/space_medium"
+            android:layout_marginRight="@dimen/space_medium"
+
+            android:background="@color/blueGray"
+            android:alpha="0.2"/>
+
+        <RelativeLayout
+            android:id="@+id/tweet_detail_activity_bottom_relative_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/tweet_detail_activity_reply_hint_bottom_border_view_id"
+
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <!-- Camera -->
+            <ImageView
+                android:id="@+id/tweet_detail_activity_camera_image_view_id"
+                android:layout_width="@dimen/new_tweet_activity_action_item_width"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+
+                android:src="@drawable/ic_photo_camera_black_24dp"
+                android:tint="@color/blueGray"/>
+
+            <!-- Gif -->
+            <ImageView
+                android:id="@+id/tweet_activity_gif_image_view_id"
+                android:layout_width="@dimen/new_tweet_activity_action_item_width"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/tweet_detail_activity_camera_image_view_id"
+
+                android:src="@drawable/ic_gif"
+                android:tint="@color/blueGray"/>
+
+            <!-- Remaining character -->
+            <TextView
+                android:id="@+id/tweet_detail_activity_remaining_character_text_view_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/tweet_detail_activity_reply_button_id"
+                android:layout_marginRight="@dimen/space_medium"
+
+                android:text="140"
+                android:textColor="@color/gray"
+                android:fontFamily="sans-serif-light"/>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tweet_detail_activity_remaining_character_text_view_id"
+                android:layout_marginTop="@dimen/space_really_small"
+                android:layout_marginBottom="@dimen/space_really_small"
+
+                android:background="@color/blueGray"
+                android:alpha="0.2"/>
+
+            <Button
+                android:id="@+id/tweet_detail_activity_reply_button_id"
+                android:layout_width="70dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="@dimen/space_really_small"
+                android:layout_marginRight="@dimen/space_medium"
+
+                android:elevation="0dp"
+                android:text="@string/reply"
+                android:textColor="@color/blue"
+                android:textAllCaps="false"
+                android:background="@drawable/button_background_white"
+                style="?android:attr/borderlessButtonStyle"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
