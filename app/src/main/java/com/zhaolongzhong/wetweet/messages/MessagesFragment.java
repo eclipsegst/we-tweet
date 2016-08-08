@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 public class MessagesFragment extends Fragment {
     private static final String TAG = MessagesFragment.class.getSimpleName();
 
-    @BindView(R.id.moments_fragment_text_view_id) TextView textView;
+    @BindView(R.id.messages_fragment_text_view_id) TextView textView;
 
     public static Fragment newInstance() {
         return new MessagesFragment();

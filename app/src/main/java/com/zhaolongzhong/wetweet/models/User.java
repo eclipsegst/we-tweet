@@ -42,6 +42,30 @@ public class User implements RealmModel {
         return screenName;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public void setProfileBackgroundImageUrl(String profileBackgroundImageUrl) {
+        this.profileBackgroundImageUrl = profileBackgroundImageUrl;
+    }
+
+    public String getProfileBackgroundImageUrl() {
+        return profileBackgroundImageUrl;
+    }
+
     // Deserialize the JSON and build User object.
     public void fromJSON(JSONObject json) {
         try {

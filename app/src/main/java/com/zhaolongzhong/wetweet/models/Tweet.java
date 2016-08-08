@@ -127,9 +127,11 @@ public class Tweet implements RealmModel {
 
                             if (variantsArray.length() > 0) {
                                 String videoUrl = variantsArray.getJSONObject(0).getString("url");
-                                String originalType = this.media.getType();
-                                this.media.setType(originalType + "," + type);
-                                this.media.setVideoUrl(videoUrl);
+                                if (videoUrl.endsWith(".mp4")) {// only allow mp4 format
+                                    String originalType = this.media.getType();
+                                    this.media.setType(originalType + "," + type);
+                                    this.media.setVideoUrl(videoUrl);
+                                }
                             }
                         }
                     }

@@ -156,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/tweet_item_normal_action_retweet_image_view_id"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/space_medium"
+                        android:layout_marginStart="@dimen/space_small"
 
                         android:text="443"/>
 
@@ -184,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/tweet_item_normal_action_like_image_view_id"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/space_medium"
+                        android:layout_marginStart="@dimen/space_small"
 
                         android:text="908"/>
 

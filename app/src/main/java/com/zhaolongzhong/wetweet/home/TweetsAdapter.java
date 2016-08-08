@@ -22,6 +22,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.zhaolongzhong.wetweet.R;
+import com.zhaolongzhong.wetweet.home.create.NewTweetActivity;
 import com.zhaolongzhong.wetweet.home.detail.TweetDetailActivity;
 import com.zhaolongzhong.wetweet.models.Media;
 import com.zhaolongzhong.wetweet.models.Tweet;
@@ -126,6 +127,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             viewHolder.mediaVideoView.setVisibility(View.GONE);
 
             if (media.getType().toLowerCase().contains("video")) {
+                Log.d(TAG, "zhao media video: " + media.getVideoUrl());
                 //        viewHolder.mediaVideoView.setVideoPath("http://techslides.com/demos/sample-videos/small.mp4");
                 viewHolder.mediaVideoView.setVisibility(View.VISIBLE);
 //                viewHolder.mediaVideoView.setVideoPath("https://pbs.twimg.com/tweet_video/CpRzHAKWgAAY0p6.mp4");
@@ -146,6 +148,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 });
 
             } else if(media.getType().toLowerCase().contains("animated_gif")) {
+                Log.d(TAG, "zhao media gif: " + media.getVideoUrl());
                 viewHolder.mediaVideoView.setVisibility(View.VISIBLE);
 //                viewHolder.mediaVideoView.setVideoPath("https://pbs.twimg.com/tweet_video/CpRzHAKWgAAY0p6.mp4");
                 viewHolder.mediaVideoView.setVideoPath(media.getVideoUrl());
@@ -175,9 +178,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void setupActionOnClickListener(ViewHolderNormal viewHolder, final Tweet tweet) {
         viewHolder.replyRelativeLayout.setOnClickListener(v -> {
-            Log.d(TAG, "Reply clicked.");
-            Toast.makeText(getContext(), "Reply clicked.", Toast.LENGTH_SHORT).show();
-            // todo: send network request to update date on server
+            String screenNames = "@" + tweet.getUser().getScreenName();
+            //todo: get screen user in body
+            NewTweetActivity.newInstance(getContext(), screenNames + " ");
         });
 
         viewHolder.retweetRelativeLayout.setOnClickListener(v -> {
@@ -269,7 +272,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         try {
             long dateMillis = simpleDateFormate.parse(rawJsonDate).getTime();
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
         } catch (ParseException e) {
             Log.e(TAG, "Error in parsing raw date string.", e);
         }
@@ -294,7 +297,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             relativeDate = relativeDate.replace("days ago", "d");
         }
 
-        // todo: handle year ago
         return relativeDate;
     }
 }

@@ -42,4 +42,7 @@
     <string name="sign_up">Sign up</string>
     <string name="login_in">Login</string>
     <string name="reply">Reply</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>

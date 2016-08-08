@@ -39,7 +39,10 @@ import cz.msebera.android.httpclient.Header;
 public class NewTweetActivity extends AppCompatActivity {
     private static final String TAG = NewTweetActivity.class.getSimpleName();
 
+    private static final String SCREEN_NAMES = "screenNames";
+
     private RestClient client;
+    private String screenNames;
 
     @BindView(R.id.new_tweet_activity_toolbar_id) Toolbar toolbar;
     @BindView(R.id.new_tweet_activity_close_image_view_id) ImageView closeImageView;
@@ -55,6 +58,12 @@ public class NewTweetActivity extends AppCompatActivity {
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, NewTweetActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void newInstance(Context context, String screenNames) {
+        Intent intent = new Intent(context, NewTweetActivity.class);
+        intent.putExtra(SCREEN_NAMES, screenNames);
         context.startActivity(intent);
     }
 
@@ -81,6 +90,7 @@ public class NewTweetActivity extends AppCompatActivity {
         }
 
         client = RestApplication.getRestClient();
+        screenNames = getIntent().getStringExtra(SCREEN_NAMES);
 
         closeImageView.setOnClickListener(closeOnClickListener);
         profileImageView.setOnClickListener(v -> Log.d(TAG, "profile icon clicked."));
@@ -89,6 +99,10 @@ public class NewTweetActivity extends AppCompatActivity {
                 .load("https://pbs.twimg.com/profile_images/675862234266931200/Gqz94bZk_normal.jpg")
                 .into(profileImageView);
         tweetEditText.addTextChangedListener(tweetTextWatcher);
+        if (screenNames != null && !screenNames.isEmpty()) {
+            tweetEditText.setText(screenNames);
+            tweetEditText.setSelection(screenNames.length());
+        }
         tweetButton.setOnClickListener(v -> {
             // todo: post tweet
             // step 1: get current user

@@ -3,8 +3,10 @@ package com.zhaolongzhong.wetweet.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,15 +17,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,8 +40,11 @@ import com.zhaolongzhong.wetweet.home.create.NewTweetActivity;
 import com.zhaolongzhong.wetweet.messages.MessagesFragment;
 import com.zhaolongzhong.wetweet.models.User;
 import com.zhaolongzhong.wetweet.moments.MomentsFragment;
+import com.zhaolongzhong.wetweet.nav.ConnectActivity;
+import com.zhaolongzhong.wetweet.nav.HighlightsActivity;
+import com.zhaolongzhong.wetweet.nav.ListsActivity;
+import com.zhaolongzhong.wetweet.nav.ProfileActivity;
 import com.zhaolongzhong.wetweet.notifications.NotificationsFragment;
-import com.zhaolongzhong.wetweet.oauth.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +53,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.zhaolongzhong.wetweet.oauth.LoginActivity.LOGIN_USER_ID;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final String SWITCH_COMPAT = "switchCompat";
 
     private static final int[] tabTitles = {
             R.string.fragment_title_home,
@@ -61,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private User currentUser;
+    private ActionBarDrawerToggle drawerToggle;
 
     @BindView(R.id.main_activity_drawer_layout_id) DrawerLayout drawerLayout;
     @BindView(R.id.main_activity_navigation_view_id) NavigationView navigationView;
@@ -82,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
 
-        SharedPreferences sharedPref = getSharedPreferences(LoginActivity.LOGIN_USER_ID, Context.MODE_PRIVATE);
-        long loginUserId= sharedPref.getLong(LoginActivity.LOGIN_USER_ID, -1);
+        SharedPreferences sharedPref = getSharedPreferences(LOGIN_USER_ID, Context.MODE_PRIVATE);
+        long loginUserId= sharedPref.getLong(LOGIN_USER_ID, -1);
         currentUser = User.getUserById(loginUserId);
 
         setupToolbarDrawerPager();
@@ -113,15 +128,38 @@ public class MainActivity extends AppCompatActivity {
             setupDrawerContent(navigationView);
             View headView = navigationView.getHeaderView(0);
             CircleImageView navHeaderCircleImageView =  (CircleImageView) headView.findViewById(R.id.nav_header_avatar_circle_image_view_id);
+            ImageView backdropImageView = (ImageView) headView.findViewById(R.id.nav_header_backdrop_image_view_id);
             Glide.with(MainActivity.this)
                     .load(currentUser.getProfileImageUrl())
                     .into(navHeaderCircleImageView);
+            Glide.with(this)
+                    .load("https://pbs.twimg.com//profile_background_images//458377954972532736//xJrn-hCj.jpeg")//todo: replace with live data
+                    .into(backdropImageView);
+            backdropImageView.setVisibility(View.VISIBLE);
         }
+
+        drawerToggle = setupDrawerToggle();
+        drawerToggle.setDrawerIndicatorEnabled(false);
+        drawerLayout.addDrawerListener(drawerToggle);
 
         // View pager
         setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabLayout(tabLayout);
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -180,60 +218,80 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(NotificationsFragment.newInstance(), null);
         adapter.addFragment(MessagesFragment.newInstance(), null);
         viewPager.setAdapter(adapter);
+
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabLayout(tabLayout);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
+        Menu menu = navigationView.getMenu();
+        setupSwitchCompat(menu);
+
         navigationView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
-            menuItem.setChecked(true);
-            drawerLayout.closeDrawers();
+            selectDrawerItem(menuItem);
             return true;
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sample_actions, menu);
-        return true;
+    private void setupSwitchCompat(Menu menu) {
+        MenuItem item = menu.findItem(R.id.nav_night_mode_id);
+        View actionView = MenuItemCompat.getActionView(item);
+        SwitchCompat switchCompat = (SwitchCompat) actionView.findViewById(R.id.action_view_switch_id);
+
+        SharedPreferences sharedPref = getSharedPreferences(SWITCH_COMPAT, Context.MODE_PRIVATE);
+        boolean isChecked = sharedPref.getBoolean(SWITCH_COMPAT, false);
+        switchCompat.setChecked(isChecked);
+//        setNightMode(isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);// result in infinite loop
+
+        switchCompat.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SWITCH_COMPAT, switchCompat.isChecked());
+            editor.apply();
+            setNightMode(switchCompat.isChecked() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        });
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        switch (AppCompatDelegate.getDefaultNightMode()) {
-            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
-                menu.findItem(R.id.menu_night_mode_system).setChecked(true);
+    public void selectDrawerItem(MenuItem menuItem) {
+        switch(menuItem.getItemId()) {
+            case R.id.nav_profile:
+                ProfileActivity.newInstance(this);
                 break;
-            case AppCompatDelegate.MODE_NIGHT_AUTO:
-                menu.findItem(R.id.menu_night_mode_auto).setChecked(true);
+            case R.id.nav_highlights:
+                HighlightsActivity.newInstance(this);
                 break;
-            case AppCompatDelegate.MODE_NIGHT_YES:
-                menu.findItem(R.id.menu_night_mode_night).setChecked(true);
+            case R.id.nav_lists:
+                ListsActivity.newInstance(this);
                 break;
-            case AppCompatDelegate.MODE_NIGHT_NO:
-                menu.findItem(R.id.menu_night_mode_day).setChecked(true);
+            case R.id.nav_discussion:
+                ConnectActivity.newInstance(this);
+                break;
+            case R.id.nav_twitter_ads_id:
+                Log.d(TAG, "Twitter Ads clicked.");
+                break;
+            case R.id.nav_night_mode_id:
+                Log.d(TAG, "Night mode clicked.");
+                break;
+            case R.id.nav_settings_id:
+                Log.d(TAG, "Settings clicked.");
+                break;
+            case R.id.nav_help_id:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://support.twitter.com/"));
+                startActivity(browserIntent);
+                break;
+            default:
                 break;
         }
-        return true;
+
+        menuItem.setChecked(true);
+        drawerLayout.closeDrawers();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.menu_night_mode_system:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-            case R.id.menu_night_mode_day:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case R.id.menu_night_mode_night:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case R.id.menu_night_mode_auto:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                break;
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

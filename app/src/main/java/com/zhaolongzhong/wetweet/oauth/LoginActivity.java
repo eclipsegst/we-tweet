@@ -50,26 +50,21 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
 
     @Override
     public void onLoginSuccess() {
+        setupDefaultUser();//todo: remove after finish other features
         SharedPreferences sharedPref = getSharedPreferences(LOGIN_USER_ID, Context.MODE_PRIVATE);
         long loginUserId= sharedPref.getLong(LOGIN_USER_ID, -1);
 
-        Log.d(TAG, "zhao loginUserId:" + loginUserId);
         if (loginUserId == -1) {
             RestClient client = RestApplication.getRestClient();
             client.verifyCredentials(2, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-                    Log.d(TAG, "zhao Credentials : \n" + jsonObject);
-                    //todo: add to local db to avoid rate limit exceeded
+                    Log.d(TAG, "Credentials : \n" + jsonObject);
                     try {
                         SharedPreferences sharedPref = getSharedPreferences(LOGIN_USER_ID, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putLong(LOGIN_USER_ID, jsonObject.getLong("id"));
                         editor.apply();
-
-                        SharedPreferences sharedPref2 = getPreferences(Context.MODE_PRIVATE);
-                        long loginUserId= sharedPref2.getLong(LOGIN_USER_ID, -1);
-                        Log.d(TAG, "zhao loginUserId:" + loginUserId);
 
                         Realm realm = Realm.getDefaultInstance();
                         realm.beginTransaction();
@@ -96,6 +91,30 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
             MainActivity.newInstance(LoginActivity.this);
             finish();
         }
+    }
+
+    /**
+     * Set default in case of rate limit exceeded.
+     */
+    private void setupDefaultUser() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        User user = new User();
+        user.setId(365265867L);
+        user.setName("zhao");
+        user.setScreenName("zhaolongz");
+        user.setProfileImageUrl("https://pbs.twimg.com/profile_images/675862234266931200/Gqz94bZk_normal.jpg");
+        user.setProfileBackgroundImageUrl("http://abs.twimg.com/images/themes/theme14/bg.gif");
+
+        realm.copyToRealmOrUpdate(user);
+        realm.commitTransaction();
+        realm.close();
+
+        SharedPreferences sharedPref = getSharedPreferences(LOGIN_USER_ID, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(LOGIN_USER_ID, 365265867L);
+        editor.apply();
     }
 
     @Override

@@ -91,7 +91,6 @@ public class TweetFragment extends Fragment {
 
     private void setupRecyclerView(RecyclerView recyclerView) {
         tweetsAdapter = new TweetsAdapter(getActivity(), tweets);
-        populateTimeline(TWEET_COUNT_PER_PAGE, 0);
         recyclerView.setAdapter(tweetsAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -135,7 +134,6 @@ public class TweetFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         isRefresh = true;
         populateTimeline(TWEET_COUNT_PER_PAGE, 0);
     }

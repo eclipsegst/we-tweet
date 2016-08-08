@@ -59,6 +59,11 @@
         <activity android:name=".search.SearchActivity"
             android:theme="@style/AppTheme.Base"/>
 
+        <activity android:name=".nav.ProfileActivity"/>
+        <activity android:name=".nav.HighlightsActivity"/>
+        <activity android:name=".nav.ListsActivity"/>
+        <activity android:name=".nav.ConnectActivity"/>
+
     </application>
 
 </manifest>
