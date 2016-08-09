@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
 
-                android:src="@drawable/ic_place_black_24dp"
+                android:src="@drawable/ic_location"
                 android:tint="@color/blueGray"/>
 
             <!-- Camera -->
@@ -104,7 +104,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/new_tweet_activity_location_image_view_id"
 
-                android:src="@drawable/ic_photo_camera_black_24dp"
+                android:src="@drawable/ic_camera"
                 android:tint="@color/blueGray"/>
 
             <!-- Gif -->

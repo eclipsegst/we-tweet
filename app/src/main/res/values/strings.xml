@@ -5,6 +5,7 @@
     <string name="tweet">Tweet</string>
 
     <string name="fragment_title_home">Home</string>
+    <string name="fragment_title_mentions">Mentions</string>
     <string name="fragment_title_moments">Moments</string>
     <string name="fragment_title_notifications">Notifications</string>
     <string name="fragment_title_messages">Messages</string>

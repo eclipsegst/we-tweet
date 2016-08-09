@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.zhaolongzhong.wetweet.R;
 import com.zhaolongzhong.wetweet.home.TweetFragment;
 import com.zhaolongzhong.wetweet.home.create.NewTweetActivity;
+import com.zhaolongzhong.wetweet.mentions.MentionsFragment;
 import com.zhaolongzhong.wetweet.messages.MessagesFragment;
 import com.zhaolongzhong.wetweet.models.User;
 import com.zhaolongzhong.wetweet.moments.MomentsFragment;
@@ -62,16 +63,18 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int[] tabTitles = {
             R.string.fragment_title_home,
+            R.string.fragment_title_mentions,
             R.string.fragment_title_moments,
             R.string.fragment_title_notifications,
             R.string.fragment_title_messages
     };
 
     private static final int[] tabIcons = {
-            R.drawable.ic_home_black_24dp,
-            R.drawable.ic_flash_on_black_24dp,
-            R.drawable.ic_notifications_black_24dp,
-            R.drawable.ic_mail_black_24dp
+            R.drawable.ic_home,
+            R.drawable.ic_mention,
+            R.drawable.ic_moment,
+            R.drawable.ic_notification,
+            R.drawable.ic_message
     };
 
     private User currentUser;
@@ -204,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
      * Set default tab icon drawable
      */
     private void setUpTabLayoutDefaultTabIcon(TabLayout tabLayout) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             Drawable drawable = ContextCompat.getDrawable(this, tabIcons[i]);
             drawable.setColorFilter(ContextCompat.getColor(this, R.color.colorPrimaryDark), PorterDuff.Mode.SRC_ATOP);
             tabLayout.getTabAt(i).setIcon(drawable);
@@ -214,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerFragmentAdapter adapter = new ViewPagerFragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(TweetFragment.newInstance(), null);
+        adapter.addFragment(MentionsFragment.newInstance(), null);
         adapter.addFragment(MomentsFragment.newInstance(), null);
         adapter.addFragment(NotificationsFragment.newInstance(), null);
         adapter.addFragment(MessagesFragment.newInstance(), null);

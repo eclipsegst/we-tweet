@@ -129,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
 
-                        android:src="@drawable/ic_reply_black_24dp"
+                        android:src="@drawable/ic_reply"
                         android:tint="@color/blueGray"/>
 
                 </RelativeLayout>
@@ -147,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
 
-                        android:src="@drawable/ic_repeat_black_24dp"
+                        android:src="@drawable/ic_retweet"
                         android:tint="@color/blueGray"/>
 
                     <TextView
@@ -203,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
 
-                        android:src="@drawable/ic_mail_black_24dp"
+                        android:src="@drawable/ic_message"
                         android:tint="@color/blueGray"/>
 
                 </RelativeLayout>

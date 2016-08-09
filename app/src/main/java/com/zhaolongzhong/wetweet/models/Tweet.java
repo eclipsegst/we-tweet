@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmModel;
@@ -188,6 +189,18 @@ public class Tweet implements RealmModel {
     public static RealmResults<Tweet> getAllTweets() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Tweet> tweets =  realm.where(Tweet.class).findAllSorted("createdAt", Sort.DESCENDING);
+        realm.close();
+        return tweets;
+    }
+
+    /**
+     * @return all the mention tweets
+     */
+    public static RealmResults<Tweet> getMentionsTweets(String screenName) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Tweet> tweets =  realm.where(Tweet.class)
+                .contains("body", screenName, Case.INSENSITIVE)
+                .findAllSorted("createdAt", Sort.DESCENDING);
         realm.close();
         return tweets;
     }
