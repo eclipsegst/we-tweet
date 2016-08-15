@@ -1,12 +1,371 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    ​
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/profile_activity_app_bar_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        ​
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/profile_activity_collapsing_toolbar_layout_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
 
-    <TextView
-        android:id="@+id/profile_activity_text_view_id"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|snap"
+                android:background="@android:color/transparent">
+                ​
+                <!-- Backdrop image-->
+                ​<ImageView
+                    android:id="@+id/profile_activity_profile_backdrop_image_view_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="144dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/eclipse"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll|snap"/>
+
+                <!-- Details -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <!-- Profile image, follow, edit profile -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <!-- Profile image -->
+                        <android.support.v7.widget.CardView
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/profile_activity_card_view_id"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_margin="@dimen/space_medium"
+
+                            android:elevation="0dp"
+                            card_view:cardCornerRadius="4dp">
+
+                            <ImageView
+                                android:id="@+id/profile_activity_profile_image_view_id"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
+
+                        </android.support.v7.widget.CardView>
+
+                        <!-- Edit profile -->
+                        <TextView
+                            android:id="@+id/profile_activity_edit_profile_text_view_id"
+                            android:layout_width="100dp"
+                            android:layout_height="36dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_margin="@dimen/space_medium"
+
+                            android:text="@string/edit_profile"
+                            android:textColor="@color/blueGray"
+                            android:textSize="@dimen/text_small"
+                            android:gravity="center"
+                            android:background="@drawable/background_round_border_only_blue_gray"
+                            android:visibility="gone"/>
+
+                        <!-- Follow button -->
+                        <RelativeLayout
+                            android:id="@+id/profile_activity_follow_relative_layout_id"
+                            android:layout_width="100dp"
+                            android:layout_height="36dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_margin="@dimen/space_medium"
+
+                            android:gravity="center"
+                            android:background="@drawable/background_round_border_only_blue"
+                            android:visibility="gone">
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/profile_activity_follow_image_view_id"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="@dimen/space_medium_small"
+
+                                    android:src="@drawable/ic_person_add_black_24dp"
+                                    android:tint="@color/blue"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_toEndOf="@+id/profile_activity_follow_image_view_id"
+                                    android:layout_centerVertical="true"
+
+                                    android:text="@string/follow"
+                                    android:textColor="@color/blue"
+                                    android:textStyle="bold"/>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                        <!-- Push notification and following -->
+                        <RelativeLayout
+                            android:id="@+id/profile_activity_push_notification_following_relative_layout_id"
+                            android:layout_width="110dp"
+                            android:layout_height="36dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_margin="@dimen/space_medium"
+
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/profile_activity_push_notification_image_view_id"
+                                android:layout_width="50dp"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="true"
+
+                                android:src="@drawable/ic_star_black_24dp"
+                                android:tint="@color/blueGray"
+                                android:background="@drawable/background_round_border_only_blue_gray"/>
+
+                            <ImageView
+                                android:id="@+id/profile_activity_following_image_view_id"
+                                android:layout_width="50dp"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentEnd="true"
+
+                                android:src="@drawable/ic_following"/>
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <!-- Name and screen name-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_medium"
+                        android:layout_marginBottom="@dimen/space_medium">
+
+                        <TextView
+                            android:id="@+id/profile_activity_name_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:textColor="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/profile_activity_screen_name_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/profile_activity_name_text_view_id"
+
+                            android:textColor="@color/blueGray"
+                            android:fontFamily="sans-serif-light" />
+
+                    </RelativeLayout>
+
+                    <!-- Location -->
+                    <RelativeLayout
+                        android:id="@+id/profile_activity_location_relative_layout_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/space_medium_small">
+
+                        <!-- Location icon -->
+                        <ImageView
+                            android:id="@+id/profile_activity_location_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+
+                            android:src="@drawable/ic_location"/>
+
+                        <!-- Location name -->
+                        <TextView
+                            android:id="@+id/profile_activity_location_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/profile_activity_location_image_view_id"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/space_small"
+
+                            android:textColor="@color/blueGray"
+                            android:fontFamily="sans-serif-light"/>
+
+                    </RelativeLayout>
+
+                    <!-- Following and followers -->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_medium"
+                        android:layout_marginBottom="@dimen/space_medium">
+
+                        <!-- Following count -->
+                        <TextView
+                            android:id="@+id/profile_activity_following_count_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_medium"
+
+                            android:textColor="@color/black"/>
+
+                        <!-- Following label -->
+                        <TextView
+                            android:id="@+id/profile_activity_following_label_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/profile_activity_following_count_text_view_id"
+
+                            android:text="@string/following"
+                            android:textColor="@color/blueGray"
+                            android:fontFamily="sans-serif-light"/>
+
+                        <!-- Followers count -->
+                        <TextView
+                            android:id="@+id/profile_activity_followers_count_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/profile_activity_following_label_text_view_id"
+                            android:layout_marginLeft="@dimen/space_medium"
+                            android:layout_marginRight="@dimen/space_medium"
+
+                            android:textColor="@color/black"/>
+
+                        <!-- Followers label -->
+                        <TextView
+                            android:id="@+id/profile_activity_followers_label_text_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/profile_activity_followers_count_text_view_id"
+
+                            android:text="@string/followers"
+                            android:textColor="@color/blueGray"
+                            android:fontFamily="sans-serif-light"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+                ​
+            </LinearLayout>
+
+            <!-- Toolbar -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+
+                app:layout_collapseMode="pin">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"
+
+                    android:background="@color/black"
+                    android:alpha="0.0"/>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/profile_activity_toolbar_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"
+
+                    android:background="@android:color/transparent"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/profile_activity_toolbar_back_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+
+                            android:src="@drawable/ic_arrow_back_black_24dp"
+                            android:tint="@color/white"/>
+
+                        <ImageView
+                            android:id="@+id/profile_activity_toolbar_search_image_view_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/space_medium_large"
+
+                            android:src="@drawable/ic_search_black_24dp"
+                            android:tint="@color/white"/>
+
+                    </RelativeLayout>
+                    </android.support.v7.widget.Toolbar>
+
+            </FrameLayout>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+    ​
+    <!-- The top margin value equals half height of the blue box -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/profile_activity_tab_layout_id"
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:tabSelectedTextColor="?android:attr/textColorPrimaryInverse"
+        app:tabIndicatorColor="?android:attr/textColorPrimaryInverse"
+        app:tabIndicatorHeight="4dp"
+        android:background="@color/blueGray"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/profile_activity_view_pager_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </LinearLayout>
+    ​
+    <android.support.design.widget.FloatingActionButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:elevation="8dp"
+        android:layout_gravity="bottom|right|end"
+        android:src="@drawable/ic_compose"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+    <ProgressBar
+        android:id="@+id/profile_activity_progress_bar_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
 
-</RelativeLayout>
+        style="?android:attr/progressBarStyleLarge"
+        android:visibility="gone"/>
+    ​
+</android.support.design.widget.CoordinatorLayout>

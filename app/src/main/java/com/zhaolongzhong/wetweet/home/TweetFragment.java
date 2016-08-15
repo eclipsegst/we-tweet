@@ -12,14 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.zhaolongzhong.wetweet.R;
+import com.zhaolongzhong.wetweet.helpers.Helpers;
 import com.zhaolongzhong.wetweet.main.RestApplication;
 import com.zhaolongzhong.wetweet.models.Tweet;
 import com.zhaolongzhong.wetweet.services.RestClient;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -66,9 +69,18 @@ public class TweetFragment extends Fragment {
         tweets.addAll(Tweet.getAllTweets());
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
-        setupToolbar(linearLayoutManager);
         setupRecyclerView(recyclerView);
         setupSwipeRefreshLayout();
+
+        invalidateViews();
+    }
+
+    private void invalidateViews() {
+        if (!Helpers.isOnline()) {
+            Toast.makeText(getActivity(), "Cannot retrieve messages at this time. Please try again later.", Toast.LENGTH_SHORT).show();
+        }
+
+        setupToolbar(linearLayoutManager);
     }
 
     private void setupToolbar(LinearLayoutManager linearLayoutManager) {
@@ -102,6 +114,10 @@ public class TweetFragment extends Fragment {
     }
 
     private void populateTimeline(int count, int page) {
+        if (!Helpers.isOnline()) {
+            swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
         client.getHomeTimeline(count, page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
@@ -127,6 +143,13 @@ public class TweetFragment extends Fragment {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
                 Log.d(TAG, "onFailure: " + statusCode + ", " + jsonObject);
                 swipeRefreshLayout.setRefreshing(false);
+
+                try {
+                    JSONObject messageObject = jsonObject.getJSONArray("errors").getJSONObject(0);
+                    Toast.makeText(getContext(), messageObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error getting errors JSONArray.", e);
+                }
             }
         });
     }

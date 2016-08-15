@@ -22,16 +22,23 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.zhaolongzhong.wetweet.R;
+import com.zhaolongzhong.wetweet.helpers.Helpers;
+import com.zhaolongzhong.wetweet.helpers.PatternEditableBuilder;
 import com.zhaolongzhong.wetweet.home.create.NewTweetActivity;
 import com.zhaolongzhong.wetweet.home.detail.TweetDetailActivity;
+import com.zhaolongzhong.wetweet.main.RestApplication;
 import com.zhaolongzhong.wetweet.models.Media;
 import com.zhaolongzhong.wetweet.models.Tweet;
+import com.zhaolongzhong.wetweet.profile.ProfileActivity;
+import com.zhaolongzhong.wetweet.services.RestClient;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,10 +54,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int VIEW_TYPE_NORMAL = 0;
     private ArrayList<Tweet> tweets;
     private Context context;
+    private RestClient client;
 
     public TweetsAdapter(Context context, ArrayList<Tweet> tweets) {
         this.context = context;
         this.tweets = tweets;
+        this.client = RestApplication.getRestClient();
     }
 
     private Context getContext() {
@@ -103,8 +112,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         viewHolder.screenNameTextView.setText(" @" + tweet.getUser().getScreenName());
         viewHolder.bodyTextView.setText(tweet.getBody());
 
-        viewHolder.retweetCountTextView.setText(String.valueOf(tweet.getRetweetCount()));
-        viewHolder.likeCountTextView.setText(String.valueOf(tweet.getFavoriteCount()));
+        new PatternEditableBuilder().
+                addPattern(Pattern.compile("\\@(\\w+)"), ContextCompat.getColor(getContext(), R.color.blue),
+                        (String text) -> {
+                            ProfileActivity.newInstance(getContext(), text);
+                            ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+                        })
+                .addPattern(Pattern.compile("\\#(\\w+)"), ContextCompat.getColor(getContext(), R.color.blue),
+                        (String text) -> Toast.makeText(getContext(), "Clicked hashtag: " + text,
+                    Toast.LENGTH_SHORT).show())
+                .into(viewHolder.bodyTextView);
 
         Glide.with(getContext())
                 .load(tweet.getUser().getProfileImageUrl())
@@ -117,88 +134,90 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
         });
 
-        setupActionOnClickListener(viewHolder, tweet);
-
         if (tweet.getMedias().size() > 0) {
-
             Media media = tweet.getMedias().get(0);
-
-            viewHolder.mediaPhotoImageView.setVisibility(View.GONE);
-            viewHolder.mediaVideoView.setVisibility(View.GONE);
-
-            if (media.getType().toLowerCase().contains("video")) {
-                Log.d(TAG, "zhao media video: " + media.getVideoUrl());
-                //        viewHolder.mediaVideoView.setVideoPath("http://techslides.com/demos/sample-videos/small.mp4");
-                viewHolder.mediaVideoView.setVisibility(View.VISIBLE);
-//                viewHolder.mediaVideoView.setVideoPath("https://pbs.twimg.com/tweet_video/CpRzHAKWgAAY0p6.mp4");
-                viewHolder.mediaVideoView.setVideoPath(media.getVideoUrl());
-                MediaController mediaController = new MediaController(getContext());
-                mediaController.setAnchorView(viewHolder.mediaVideoView);
-//                viewHolder.mediaVideoView.setMediaController(mediaController);
-                viewHolder.mediaVideoView.requestFocus();
-                viewHolder.mediaVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    // Close the progress bar and play the video
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        mediaPlayer.setVolume(0f, 0f);
-                        mediaPlayer.setLooping(true);
-                        //todo: handle sound properly
-                        viewHolder.mediaVideoView.start();
-                        viewHolder.mediaVideoView.canPause();
-                    }
-                });
-
-            } else if(media.getType().toLowerCase().contains("animated_gif")) {
-                Log.d(TAG, "zhao media gif: " + media.getVideoUrl());
-                viewHolder.mediaVideoView.setVisibility(View.VISIBLE);
-//                viewHolder.mediaVideoView.setVideoPath("https://pbs.twimg.com/tweet_video/CpRzHAKWgAAY0p6.mp4");
-                viewHolder.mediaVideoView.setVideoPath(media.getVideoUrl());
-                MediaController mediaController = new MediaController(getContext());
-                mediaController.setAnchorView(viewHolder.mediaVideoView);
-//                viewHolder.mediaVideoView.setMediaController(mediaController);
-                viewHolder.mediaVideoView.requestFocus();
-                viewHolder.mediaVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    // Close the progress bar and play the video
-                    public void onPrepared(MediaPlayer mp) {
-                        viewHolder.mediaVideoView.start();
-                    }
-                });
-
-            } else if (media.getType().equals("photo")) {
-                viewHolder.mediaPhotoImageView.setVisibility(View.VISIBLE);
-                Glide.with(getContext()).load(media.getMediaUrl()).into(viewHolder.mediaPhotoImageView);
-            } else {
-                viewHolder.mediaPhotoImageView.setVisibility(View.GONE);
-                viewHolder.mediaVideoView.setVisibility(View.GONE);
-            }
+            setupMedia(viewHolder, media);
         } else {
             viewHolder.mediaPhotoImageView.setVisibility(View.GONE);
             viewHolder.mediaVideoView.setVisibility(View.GONE);
         }
-    }
 
-    private void setupActionOnClickListener(ViewHolderNormal viewHolder, final Tweet tweet) {
+        viewHolder.thumbnailImageView.setOnClickListener(v -> {
+            ProfileActivity.newInstance(getContext(), tweet.getUser().getScreenName());
+            ((Activity)getContext()).overridePendingTransition(R.anim.right_in, R.anim.stay);
+        });
         viewHolder.replyRelativeLayout.setOnClickListener(v -> {
             String screenNames = "@" + tweet.getUser().getScreenName();
             //todo: get screen user in body
             NewTweetActivity.newInstance(getContext(), screenNames + " ");
         });
 
+        // retweet
+        viewHolder.retweetCountTextView.setText(String.valueOf(tweet.getRetweetCount()));
+        viewHolder.retweetCountTextView.setVisibility(tweet.getRetweetCount() == 0 ? View.GONE : View.VISIBLE);
+
+        viewHolder.retweetCountTextView.setTextColor(ContextCompat.getColor(getContext(), tweet.isRetweeted() ? R.color.green : R.color.blueGray));
+        Drawable retweetDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_retweet);
+        retweetDrawable.setColorFilter(ContextCompat.getColor(getContext(), tweet.isRetweeted() ? R.color.green : R.color.blueGray), PorterDuff.Mode.SRC_ATOP);
+        viewHolder.retweetImageView.setImageDrawable(retweetDrawable);
+
+        // favorite
+        viewHolder.likeCountTextView.setText(String.valueOf(tweet.getFavoriteCount()));
+        viewHolder.likeCountTextView.setVisibility(tweet.getFavoriteCount() == 0 ? View.GONE : View.VISIBLE);
+
+        viewHolder.likeCountTextView.setTextColor(ContextCompat.getColor(getContext(), tweet.isFavorited() ? R.color.red : R.color.blueGray));
+        Drawable favoriteDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_black_24dp);
+        favoriteDrawable.setColorFilter(ContextCompat.getColor(getContext(), tweet.isFavorited() ? R.color.red : R.color.blueGray), PorterDuff.Mode.SRC_ATOP);
+        viewHolder.likeImageView.setImageDrawable(favoriteDrawable);
+
         viewHolder.retweetRelativeLayout.setOnClickListener(v -> {
+            if (!Helpers.isOnline()) {
+                Toast.makeText(getContext(), "Network is not available.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            boolean isRetweeted = tweet.isRetweeted();
+
+//            Drawable retweetDrawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_retweet);
+            retweetDrawable.setColorFilter(ContextCompat.getColor(getContext(), isRetweeted? R.color.blueGray : R.color.green), PorterDuff.Mode.SRC_ATOP);
+            viewHolder.retweetImageView.setImageDrawable(retweetDrawable);
+
+            int flag = isRetweeted ? -1 : 1;
+            int count = Integer.valueOf(viewHolder.retweetCountTextView.getText().toString()) + flag;
+
+            viewHolder.retweetCountTextView.setVisibility(count == 0 ? View.GONE : View.VISIBLE);
+            viewHolder.retweetCountTextView.setText(String.valueOf(count));
+            viewHolder.retweetCountTextView.setTextColor(ContextCompat.getColor(getContext(), isRetweeted ? R.color.blueGray : R.color.green));
+
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            tweet.setRetweeted(!isRetweeted);
+            tweet.setRetweetCount(count);
+            realm.commitTransaction();
+            realm.close();
+
             Log.d(TAG, "Reweet clicked.");
-            Toast.makeText(getContext(), "Reweet clicked.", Toast.LENGTH_SHORT).show();
             // todo: send network request to update date on server
         });
 
         viewHolder.likeRelativeLayout.setOnClickListener(v -> {
+            if (!Helpers.isOnline()) {
+                Toast.makeText(getContext(), "Network is not available.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             boolean isFavorited = tweet.isFavorited();
 
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_favorite_black_24dp);
-            drawable.setColorFilter(ContextCompat.getColor(getContext(), isFavorited? R.color.blueGray : R.color.red), PorterDuff.Mode.SRC_ATOP);
-            viewHolder.likeImageView.setImageDrawable(drawable);
+            favoriteDrawable.setColorFilter(ContextCompat.getColor(getContext(), isFavorited? R.color.blueGray : R.color.red), PorterDuff.Mode.SRC_ATOP);
+            viewHolder.likeImageView.setImageDrawable(favoriteDrawable);
 
-            int flag = isFavorited? -1 : 1;
+            int flag = isFavorited ? -1 : 1;
+            Log.d(TAG, "zhaoz count text: " + viewHolder.likeCountTextView.getText().toString());
             int count = Integer.valueOf(viewHolder.likeCountTextView.getText().toString()) + flag;
+            Log.d(TAG, "zhaoz count: " + count);
             viewHolder.likeCountTextView.setText(String.valueOf(count));
+
+            viewHolder.likeCountTextView.setVisibility(count == 0 ? View.GONE : View.VISIBLE);
+            viewHolder.likeCountTextView.setText(String.valueOf(count));
+            viewHolder.likeCountTextView.setTextColor(ContextCompat.getColor(getContext(), isFavorited ? R.color.blueGray : R.color.red));
 
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
@@ -216,6 +235,69 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Toast.makeText(getContext(), "Message clicked.", Toast.LENGTH_SHORT).show();
             // todo: send network request to update date on server
         });
+    }
+
+    // setup retweet
+    private void setupRetweet(ViewHolderNormal viewHolder, Tweet tweet) {
+
+    }
+
+    // setup favorite
+    private void setupFavorite(ViewHolderNormal viewHolder, Tweet tweet) {
+
+    }
+
+    // setup media
+    private void setupMedia(ViewHolderNormal viewHolder, Media media) {
+        viewHolder.mediaPhotoImageView.setVisibility(View.GONE);
+        viewHolder.mediaVideoView.setVisibility(View.GONE);
+
+        if (media.getType().toLowerCase().contains("video")) {
+            //        viewHolder.mediaVideoView.setVideoPath("http://techslides.com/demos/sample-videos/small.mp4");
+            viewHolder.mediaVideoView.setVisibility(View.VISIBLE);
+//                viewHolder.mediaVideoView.setVideoPath("https://pbs.twimg.com/tweet_video/CpRzHAKWgAAY0p6.mp4");
+            viewHolder.mediaVideoView.setVideoPath(media.getVideoUrl());
+            MediaController mediaController = new MediaController(getContext());
+            mediaController.setAnchorView(viewHolder.mediaVideoView);
+//                viewHolder.mediaVideoView.setMediaController(mediaController);
+            viewHolder.mediaVideoView.requestFocus();
+            viewHolder.mediaVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                // Close the progress bar and play the video
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.setVolume(0f, 0f);
+                    mediaPlayer.setLooping(true);
+                    //todo: handle sound properly
+                    viewHolder.mediaVideoView.start();
+                    viewHolder.mediaVideoView.canPause();
+                }
+            });
+
+        } else if(media.getType().toLowerCase().contains("animated_gif")) {
+            viewHolder.mediaVideoView.setVisibility(View.VISIBLE);
+//                viewHolder.mediaVideoView.setVideoPath("https://pbs.twimg.com/tweet_video/CpRzHAKWgAAY0p6.mp4");
+            viewHolder.mediaVideoView.setVideoPath(media.getVideoUrl());
+            MediaController mediaController = new MediaController(getContext());
+            mediaController.setAnchorView(viewHolder.mediaVideoView);
+//                viewHolder.mediaVideoView.setMediaController(mediaController);
+            viewHolder.mediaVideoView.requestFocus();
+            viewHolder.mediaVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                // Close the progress bar and play the video
+                public void onPrepared(MediaPlayer mp) {
+                    viewHolder.mediaVideoView.start();
+                }
+            });
+
+        } else if (media.getType().equals("photo")) {
+            viewHolder.mediaPhotoImageView.setVisibility(View.VISIBLE);
+            Glide.with(getContext()).load(media.getMediaUrl()).into(viewHolder.mediaPhotoImageView);
+        } else {
+            viewHolder.mediaPhotoImageView.setVisibility(View.GONE);
+            viewHolder.mediaVideoView.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupActionOnClickListener(ViewHolderNormal viewHolder, final Tweet tweet) {
+
     }
 
     public static class ViewHolderNormal extends RecyclerView.ViewHolder {
@@ -273,28 +355,38 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             long dateMillis = simpleDateFormate.parse(rawJsonDate).getTime();
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+
+            if (relativeDate.contains("in")) {
+                try {
+                    Date createAtDate = simpleDateFormate.parse(rawJsonDate);
+                    SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yy", Locale.US);
+                    return newFormat.format(createAtDate);
+                } catch (ParseException e) {
+                    Log.e(TAG, "Error in parsing raw date string.", e);
+                }
+            }
         } catch (ParseException e) {
             Log.e(TAG, "Error in parsing raw date string.", e);
         }
 
         if (relativeDate.contains(" minutes ago")) {
-            relativeDate = relativeDate.replace("minutes ago", "m");
+            relativeDate = relativeDate.replace("minutes ago", "m").replaceAll("\\s+","");
         }
 
         if (relativeDate.contains(" minute ago")) {
-            relativeDate = relativeDate.replace("minute ago", "m");
+            relativeDate = relativeDate.replace("minute ago", "m").replaceAll("\\s+","");
         }
 
         if (relativeDate.contains(" hours ago")) {
-            relativeDate = relativeDate.replace("hours ago", "h");
+            relativeDate = relativeDate.replace("hours ago", "h").replaceAll("\\s+","");
         }
 
         if (relativeDate.contains(" hour ago")) {
-            relativeDate = relativeDate.replace("hour ago", "h");
+            relativeDate = relativeDate.replace("hour ago", "h").replaceAll("\\s+","");
         }
 
         if (relativeDate.contains(" days ago")) {
-            relativeDate = relativeDate.replace("days ago", "d");
+            relativeDate = relativeDate.replace("days ago", "d").replaceAll("\\s+","");
         }
 
         return relativeDate;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:support="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/menu_item_share_id"
+        android:title="@string/menu_share"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_drafts_id"
+        android:title="@string/menu_drafts"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_view_lists_id"
+        android:title="@string/menu_view_lists"
+        support:showAsAction="never"/>
+
+</menu>

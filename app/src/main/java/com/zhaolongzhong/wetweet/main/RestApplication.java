@@ -16,12 +16,13 @@ public class RestApplication extends com.activeandroid.app.Application {
     private static final String TAG = RestApplication.class.getSimpleName();
 
     private static Context context;
-    private static Application application;
+    private static RestApplication application;
 
     @Override
     public void onCreate() {
         super.onCreate();
         RestApplication.context = this;
+        application = this;
 
         // Setup realm
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build();

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:support="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/menu_item_share_id"
+        android:title="@string/menu_share"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_turn_off_retweets_id"
+        android:title="@string/menu_turn_off_retweets"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_add_to_list_id"
+        android:title="@string/menu_add_to_list"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_view_lists_id"
+        android:title="@string/menu_view_lists"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_mute_id"
+        android:title="@string/menu_mute"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_block_id"
+        android:title="@string/menu_block"
+        support:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_report_id"
+        android:title="@string/menu_report"
+        support:showAsAction="never"/>
+
+</menu>

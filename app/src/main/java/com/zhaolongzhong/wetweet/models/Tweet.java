@@ -36,6 +36,7 @@ public class Tweet implements RealmModel {
     private int favoriteCount;
 
     private User user;
+    private String screenName;
     private Media media;
 
     public long getId() {
@@ -70,6 +71,14 @@ public class Tweet implements RealmModel {
         return user;
     }
 
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
     public ArrayList<Media> getMedias() {
         return new ArrayList<>(Media.getMediaByTweetId(String.valueOf(this.id)));
     }
@@ -100,8 +109,16 @@ public class Tweet implements RealmModel {
             this.retweeted = jsonObject.getBoolean("retweeted");
             this.retweetCount = jsonObject.getInt("retweet_count");
             this.favoriteCount = jsonObject.getInt("favorite_count");
-            this.user = new User();
-            this.user.fromJSON(jsonObject.getJSONObject("user"));
+
+            this.screenName = jsonObject.getJSONObject("user").getString("screen_name");
+            User user = User.getUserByScreenName(screenName);
+
+            if (user == null) {
+                user = new User();
+                user.fromJSON(jsonObject.getJSONObject("user"));
+            }
+
+            this.user = user;
 
             this.media = new Media();
             if (jsonObject.has("entities") && jsonObject.getJSONObject("entities").has("media")) {
@@ -186,6 +203,16 @@ public class Tweet implements RealmModel {
     /**
      * @return all the tweets
      */
+    public static RealmResults<Tweet> getHomelineTweets() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Tweet> tweets =  realm.where(Tweet.class).findAllSorted("createdAt", Sort.DESCENDING);
+        realm.close();
+        return tweets;
+    }
+
+    /**
+     * @return all the tweets
+     */
     public static RealmResults<Tweet> getAllTweets() {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Tweet> tweets =  realm.where(Tweet.class).findAllSorted("createdAt", Sort.DESCENDING);
@@ -215,5 +242,20 @@ public class Tweet implements RealmModel {
                 equalTo("id", tweetId).findFirst();
         realm.close();
         return tweet;
+    }
+
+    /**
+     * Return a list tweets by user
+     * @param screenName
+     * @return
+     */
+    public static RealmResults<Tweet> getTweetsByScreenName(String screenName) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Tweet> tweets =  realm.where(Tweet.class).
+                equalTo("screenName", screenName)
+                .findAllSorted("createdAt", Sort.DESCENDING);
+        realm.close();
+
+        return tweets;
     }
 }

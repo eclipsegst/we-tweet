@@ -1,8 +1,8 @@
-# Project 4 - *Name of App Here*
+# Project 4 - *WeTweet*
 
 **WeTweet** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **6** hours spent in total
+Time spent: **26** hours spent in total
 
 ## User Stories
 
@@ -12,25 +12,25 @@ The following **required** functionality is completed:
 * [X] User can **switch between Timeline and Mention views using tabs**
   * [X] User can view their home timeline tweets.
   * [X] User can view the recent mentions of their username.
-* [ ] User can navigate to **view their own profile**
-  * [ ] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
-* [ ] User can **click on the profile image** in any tweet to see **another user's** profile.
- * [ ] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
- * [ ] Profile view includes that user's timeline
-* [ ] User can [infinitely paginate](http://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews-and-RecyclerView) any of these timelines (home, mentions, user) by scrolling to the bottom
+* [X] User can navigate to **view their own profile**
+  * [X] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
+* [X] User can **click on the profile image** in any tweet to see **another user's** profile.
+ * [X] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
+ * [X] Profile view includes that user's timeline
+* [X] User can [infinitely paginate](http://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews-and-RecyclerView) any of these timelines (home, mentions, user) by scrolling to the bottom
 
 The following **optional** features are implemented:
 
-* [ ] User can view following / followers list through the profile
-* [ ] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
-* [ ] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
-* [ ] User can **"reply" to any tweet on their home timeline**
-  * [ ] The user that wrote the original tweet is automatically "@" replied in compose
-* [ ] User can click on a tweet to be **taken to a "detail view"** of that tweet
- * [ ] User can take favorite (and unfavorite) or retweet actions on a tweet
-* [ ] Improve the user interface and theme the app to feel twitter branded
-* [ ] User can **search for tweets matching a particular query** and see results
-* [ ] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
+* [X] User can view following / followers list through the profile
+* [X] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
+* [X] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
+* [X] User can **"reply" to any tweet on their home timeline**
+  * [X] The user that wrote the original tweet is automatically "@" replied in compose
+* [X] User can click on a tweet to be **taken to a "detail view"** of that tweet
+ * [X] User can take favorite (and unfavorite) or retweet actions on a tweet
+* [X] Improve the user interface and theme the app to feel twitter branded
+* [X] User can **search for tweets matching a particular query** and see results
+* [X] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
 
 The following **bonus** features are implemented:
 
@@ -41,6 +41,21 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 * [X] Create Twitter style icons using Sketch.
+* [X] User can follow/unfollow a specified user.
+* [X] Add Edit profile page navigation and animation.
+* [X] Persist friends and followers of a specified user in local database use Friends and Followers Ids
+
+## Video Walkthrough
+
+Here's a walkthrough of implemented user stories:
+
+![Video Walkthrough](wetweet01.gif)
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+## Notes
+
+None
 
 ## Open-source libraries used
 

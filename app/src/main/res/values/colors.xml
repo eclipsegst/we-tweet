@@ -9,6 +9,8 @@
     <color name="gray">#9E9E9E</color>
     <color name="blueGray">#607D8B</color>
     <color name="red">#F44336</color>
+    <color name="amber">#FFC107</color>
+    <color name="green">#00E676</color>
 
     <color name="cyan">#00BCD4</color>
     <!-- Twitter blue -->

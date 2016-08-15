@@ -3,10 +3,13 @@ package com.zhaolongzhong.wetweet.oauth;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -19,6 +22,8 @@ import com.zhaolongzhong.wetweet.services.RestClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import io.realm.Realm;
 
@@ -31,6 +36,8 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
 
     public static final String LOGIN_USER_ID = "loginUserId";
 
+    @BindView(R.id.welcome_activity_progress_bar_id) ProgressBar progressBar;
+
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
@@ -40,6 +47,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+        ButterKnife.bind(this);
+
+        progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blueGray), PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
@@ -123,6 +133,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<RestClient> {
     }
 
     public void loginToTwitter(View view) {
+        progressBar.setVisibility(View.VISIBLE);
         getClient().connect();
     }
 }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.zhaolongzhong.wetweet.R;
@@ -26,6 +27,7 @@ import com.zhaolongzhong.wetweet.oauth.LoginActivity;
 import com.zhaolongzhong.wetweet.services.RestClient;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -135,6 +137,13 @@ public class MentionsFragment extends Fragment {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
                 Log.d(TAG, "onFailure: " + statusCode + ", " + jsonObject);
                 swipeRefreshLayout.setRefreshing(false);
+
+                try {
+                    JSONObject messageObject = jsonObject.getJSONArray("errors").getJSONObject(0);
+                    Toast.makeText(getContext(), messageObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error getting errors JSONArray.", e);
+                }
             }
         });
     }

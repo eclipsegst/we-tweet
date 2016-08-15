@@ -27,23 +27,49 @@
 
     <string name="menu_copy_link_to_tweet">Copy link to Tweet</string>
     <string name="menu_block">Block</string>
+    <string name="menu_report">Report</string>
     <string name="menu_report_ad">Report ad</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_drafts">Draft</string>
+    <string name="menu_view_lists">View Lists</string>
+    <string name="menu_turn_off_retweets">Turn off Retweets</string>
+    <string name="menu_mute">Mute</string>
+    <string name="menu_add_to_list">Add to List</string>
 
     <string name="what_is_happening">What\'s happening?</string>
     <string name="save_draft">Save draft?</string>
     <string name="delete">Delete</string>
     <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="tweet_notifications">Tweet notifications</string>
+    <string name="tweet_notifications_message">You will now receive notifications whenever they Tweet.</string>
+    <string name="tweet_notifications_turn_off">Turn off Tweet notifications</string>
+    <string name="unfollow">Unfollow</string>
 
     <string name="retweet">RETWEET</string>
     <string name="likes">LIKES</string>
     <string name="search_twitter">Search Twitter</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="follow">Follow</string>
 
     <string name="welcome_title">Welcome to Twitter.</string>
     <string name="welcome_subtitle">See what\'s happening in the world right now.</string>
     <string name="sign_up">Sign up</string>
     <string name="login_in">Login</string>
     <string name="reply">Reply</string>
+    <string name="edit_profile">Edit profile</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="can_not_load_user_info">Can not load user\'s info. Please try again later.</string>
+
+    <string name="cheese_ipsum">Jarlsberg lancashire edam. Dolcelatte hard cheese brie st. agur blue
+    cheese caerphilly bavarian bergkase cheese and biscuits mascarpone. Cheeseburger swiss bavarian
+    bergkase cream cheese fromage frais cheesy feet port-salut airedale. St. agur blue cheese rubber
+    cheese caerphilly cheddar cheesecake cream cheese manchego lancashire. Roquefort squirty cheese
+    the big cheese.</string>
 </resources>

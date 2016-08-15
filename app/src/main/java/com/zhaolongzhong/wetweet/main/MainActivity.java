@@ -12,9 +12,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -35,6 +32,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zhaolongzhong.wetweet.R;
+import com.zhaolongzhong.wetweet.helpers.ViewPagerFragmentAdapter;
 import com.zhaolongzhong.wetweet.home.TweetFragment;
 import com.zhaolongzhong.wetweet.home.create.NewTweetActivity;
 import com.zhaolongzhong.wetweet.mentions.MentionsFragment;
@@ -44,11 +42,9 @@ import com.zhaolongzhong.wetweet.moments.MomentsFragment;
 import com.zhaolongzhong.wetweet.nav.ConnectActivity;
 import com.zhaolongzhong.wetweet.nav.HighlightsActivity;
 import com.zhaolongzhong.wetweet.nav.ListsActivity;
-import com.zhaolongzhong.wetweet.nav.ProfileActivity;
+import com.zhaolongzhong.wetweet.profile.ProfileActivity;
 import com.zhaolongzhong.wetweet.notifications.NotificationsFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.zhaolongzhong.wetweet.search.SearchActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_activity_content_toolbar_id) Toolbar toolbar;
     @BindView(R.id.main_activity_content_toolbar_profile_circle_image_view_id) CircleImageView toolbarCircleImageView;
     @BindView(R.id.main_activity_content_toolbar_title_text_view_id) TextView titleTextView;
+    @BindView(R.id.main_activity_content_toolbar_search_image_view_id) ImageView searchImageView;
     @BindView(R.id.main_activity_content_view_pager_id) ViewPager viewPager;
     @BindView(R.id.main_activity_content_tab_layout_id) TabLayout tabLayout;
     @BindView(R.id.main_activity_content_fab_id) FloatingActionButton fab;
@@ -125,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(MainActivity.this)
                 .load(currentUser.getProfileImageUrl())
                 .into(toolbarCircleImageView);
+
+        searchImageView.setOnClickListener(v -> {
+            SearchActivity.newInstance(this);
+            overridePendingTransition(R.anim.right_in, R.anim.stay);
+        });
 
         // Drawer layout
         if (navigationView != null) {
@@ -258,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.nav_profile:
-                ProfileActivity.newInstance(this);
+                ProfileActivity.newInstance(this, currentUser.getScreenName());
                 break;
             case R.id.nav_highlights:
                 HighlightsActivity.newInstance(this);
@@ -307,32 +309,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> fragments = new ArrayList<>();
-        private final List<String> fragmentTitles = new ArrayList<>();
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        public ViewPagerFragmentAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            fragments.add(fragment);
-            fragmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitles.get(position);
-        }
+        drawerLayout.closeDrawers();
     }
 }
